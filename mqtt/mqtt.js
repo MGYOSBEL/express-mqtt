@@ -16,10 +16,13 @@ mqttClient.on('connect', function () {
    
   mqttClient.on('message', function (topic, message) {
     // message is Buffer
-    console.log(topic, message.toString());
-    const date = new Date();
-    const registryPath = `${topic}/${date}`;
-    storage.saveRegistry(registryPath, {value: message.toString()});
+    const date = new Date().getTime();
+    const registryPath = topic;
+    const data = {
+        timestamp: date,
+        value: parseInt(message.toString())
+    };
+    storage.saveRegistry(registryPath, {...data});
   })
 
   module.exports = mqttClient;
